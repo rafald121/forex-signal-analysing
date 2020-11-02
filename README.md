@@ -2,9 +2,10 @@
 
 It is code from 05.2019 but I recently pushed it to public GitHub repository for recruitment process. 
 
-Most of engine's logic is in `app/backtest/` module. 
+Most of engine's logic is in `app/backtest/` directory. 
+`app/backtest/backtest.py` is the module that run and manage whole logic. 
 
-I know that a lot of project's code could be written better but It was 1.5 years ago from now(2020.11) and I learnt a lot new things since this moment.
+I know that a lot of project's code could be written better but It was 1.5 years ago from now(2020.11) and I learnt a lot of new things since this moment. Moreover it was writing in over-time work at nights. 
 
 ## Description
 It is my engineer thesis in which I tried to analyse signals messages (buy or sell decision suggestions messages) effectiveness based on historical Forex prices and Telegram forex signals authors' messages.
