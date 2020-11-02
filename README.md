@@ -1,8 +1,24 @@
-[![docker pulls](https://img.shields.io/docker/pulls/jupyter/base-notebook.svg)](https://hub.docker.com/r/jupyter/base-notebook/) [![docker stars](https://img.shields.io/docker/stars/jupyter/base-notebook.svg)](https://hub.docker.com/r/jupyter/base-notebook/) [![image metadata](https://images.microbadger.com/badges/image/jupyter/base-notebook.svg)](https://microbadger.com/images/jupyter/base-notebook "jupyter/base-notebook image metadata")
+## Forex's signal analyse engine
 
-# Base Jupyter Notebook Stack
+It is code from 05.2019 but I recently pushed it to public GitHub repository for recruitment process. 
 
-Please visit the documentation site for help using and contributing to this image and others.
+Most of engine's logic is in `app/backtest/` module. 
 
-* [Jupyter Docker Stacks on ReadTheDocs](http://jupyter-docker-stacks.readthedocs.io/en/latest/index.html)
-* [Selecting an Image :: Core Stacks :: jupyter/base-notebook](http://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-base-notebook)
+I know that a lot of project's code could be written better but It was 1.5 years ago from now(2020.11) and I learnt a lot new things since this moment.
+
+## Description
+It is my engineer thesis in which I tried to analyse signals messages (buy or sell decision suggestions messages) effectiveness based on historical Forex prices and Telegram forex signals authors' messages.
+To achieve this I had to create engine that:
+1. retrieving, scrapping and storing historical currency prices
+2. parsing and analysing signal messages
+3. imitating of buy and sell flow for some period of time for given amount of messages at the time
+4. creating reports of effectiveness for given signal authors, for given period of time or given currency
+
+Used technologies:
+- Python
+- MongoDB with mongoengine ORM
+- Docker
+- Jupyter notebook
+- Selenium
+- pandas
+- Regular expressions
