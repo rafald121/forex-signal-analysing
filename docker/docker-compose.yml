@@ -1,0 +1,67 @@
+version: "3"
+services:
+
+  mongo:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - ./database/db4:/data/db
+    ports:
+      - 27017:27017
+
+  app:
+    build: ./app
+    container_name: app
+    image: app
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    volumes:
+      - ./app:/usr/src/app
+
+#  jupyter:
+#    image: jupyter/scipy-notebook
+#    volumes:
+#      - ./app/backtest/reports:/home/jovyan/work
+#    container_name: jupyter
+#    ports:
+#      - 8881:8888
+#    build:
+#      context: .
+#    build: ./jupyter
+
+#  db_filler:
+#    build: ./database/data_preparators
+#    container_name: db_filler
+#    image: db_filler
+#    stdin_open: true
+#    tty: true
+#    depends_on:
+#      - mongo
+#    links:
+#      - mongo
+#    volumes:
+#      - /Users/rafaldolega/Desktop/HIST_DATA_2018:/histdata #TODO common constants for docker and python
+
+#  TODO jak podmieniac obrazy w docker-compose ?
+#  telegram_filler:
+#    build: ./telegram
+#    container_name: telegram_filler
+#    image: telegram_filler
+#    stdin_open: true
+#    tty: true
+#    depends_on:
+#      - mongo
+#    links:
+#      - mongo
+#    volumes:
+#      - ./telegram:/usr/src/app
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8092:8081

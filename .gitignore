@@ -1,0 +1,10 @@
+*.iml
+.idea
+syspath
+\.DS_Store
+venv/
+*.pyc
+database/db*/*
+docs/*
+data/historical_prices/*
+telegram/rafald1211*

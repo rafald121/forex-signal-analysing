@@ -1,0 +1,12 @@
+### Mongo-express
+
+docker run --link <running_mongo_container> -p <port_host>:8081 mongo-express
+docker run --name mongo-express -d --link mongo -p 8095:8081 mongo-express 
+
+
+`If docker container is not build yet:`
+docker run --name mongo -p 27018:27017 -v db2:/data/db -d mongo mongod
+`Once you builded the container start or stop it:`
+docker start mongo
+docker stop mongo
+

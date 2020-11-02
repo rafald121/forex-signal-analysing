@@ -1,0 +1,4 @@
+mongoengine
+pandas
+pymongo
+tqdm

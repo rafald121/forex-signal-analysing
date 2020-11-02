@@ -1,0 +1,7 @@
+pymongo
+telethon
+mongoengine
+tqdm
+python-dateutil
+pandas
+matplotlib
