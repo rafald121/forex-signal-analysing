@@ -30,13 +30,9 @@ PRE_BACKTEST_RECOGNISED = 'pre_backtest_recognised'
 PRE_BACKTEST_PROCESSED = 'pre_backtest_processed'
 
 channel = ChannelNameChoices.BLUECAPITAL_FX
-report_version_recognise = 1
-report_version_process = 1
-report_version_backtest = 3
-report_name_recognised = f'recognise_{channel}_{report_version_recognise}'  # Gdy tworzymy nowy raport recognision
+report_name_recognised = f'recognise_{channel}'  # Gdy tworzymy nowy raport recognision
 process_signal_report_name_input = report_name_recognised  # Gdy tworzymy process signal weź na podstawie
-process_signal_report_name_output= f'processed_{channel}_{report_version_process}'  # Gdy tworzymy nowy raport process
-backtest_report_name_output= f'backtest_{channel}_{report_version_backtest}'  # Gdy tworzymy nowy raport process
+process_signal_report_name_output= f'processed_{channel}'  # Gdy tworzymy nowy raport process
 
 
 class PreBacktest():
@@ -49,62 +45,62 @@ class PreBacktest():
                  process_signal_report_name_output='report_process_signal',
                  run_backtest=False,
                  run_backtest_report_name_input=process_signal_report_name_output,
-                 wallet_initial_amount=config.WALLET_INITIAL_AMOUNT):
+                 ):
+        self.recognise = recognise
+        self.analysed_chat_name = analysed_chat_name
+        self.run_backtest_report_name_input = run_backtest_report_name_input
+        self.recognise_report_name = recognise_report_name
+        self.channel = self.get_or_create_channel(analysed_chat_id, analysed_chat_name)
+        self.connect_to_db()
 
+    def run_backtest(self):
+        messages_processed_successfully = ReportFetcher().get_prebacktest_processed_success(
+            self.run_backtest_report_name_input
+        )
+        messages_filler = BACKTEST_MESSAGES_FILLER_TYPE_MAPPER[MessageFillTypeChoices.OBJECTS](
+            messages_processed_successfully
+        )
+        backtest_config = BacktestConfig(
+            wallet_initial_amount=config.WALLET_INITIAL_AMOUNT
+        )
+        backtest = Backtest(
+            messages_filler=messages_filler,
+            config=backtest_config
+        )
+        backtest.create_backtest_related_instances()
+        backtest.fill_messages()
+        backtest.run_analysing()
+        backtest.save_backtest_to_database()
+
+    def process_signal(self):
+        if hasattr(self, 'report_recognision'):
+            recognised_messages_signal = self.report_recognision[MessageTypeChoices.SIGNAL]
+        else:
+            collection = get_collection_for_database(PRE_BACKTEST_RECOGNISED)
+            recognised_messages_signal_report = collection.find_one({
+                'report_name': process_signal_report_name_input
+            })
+            recognised_messages_signal = recognised_messages_signal_report[
+                MessageTypeChoices.SIGNAL]
+
+        prebacktest_process = PreBacktestProcessSignal(
+            recognised_messages_signal,
+            channel_name=self.channel.name,
+            report_name=process_signal_report_name_output
+        )
+        prebacktest_process.process()
+
+    def recognise_messages(self):
+        prebacktest_recognise = PreBacktestRecognise(
+            self.channel.channel_id, self.analysed_chat_name, self.recognise_report_name
+        )
+        self.report_recognision = prebacktest_recognise.recognise()
+
+    def connect_to_db(self):
         connect_to_db()
         register_connection(DB_BACKTEST,
                             db=DB_BACKTEST, name=DB_BACKTEST,
                             host=MONGO_HOST, port=MONGO_PORT)
-
-        if recognise is False and process_signal_report_name_input is None:
-            logger.error('Whence do you want to load messages to process ?'
-                         'You have to provide initial process_signal_report_name_input '
-                         'if recognise=False')
-            return
-
-        self.channel = self.get_or_create_channel(analysed_chat_id, analysed_chat_name)
-
-        if recognise:
-            prebacktest_recognise = PreBacktestRecognise(
-                self.channel.channel_id, analysed_chat_name, recognise_report_name
-            )
-            self.report_recognision = prebacktest_recognise.recognise()
-
-        if process_signal:
-            if hasattr(self, 'report_recognision'):
-                recognised_messages_signal = self.report_recognision[MessageTypeChoices.SIGNAL]
-            else:
-                collection = get_collection_for_database(PRE_BACKTEST_RECOGNISED)
-                recognised_messages_signal_report = collection.find_one({
-                    'report_name': process_signal_report_name_input
-                })
-                recognised_messages_signal = recognised_messages_signal_report[MessageTypeChoices.SIGNAL]
-
-            prebacktest_process = PreBacktestProcessSignal(
-                recognised_messages_signal,
-                channel_name=self.channel.name,
-                report_name=process_signal_report_name_output
-            )
-            prebacktest_process.process()
-
-        if run_backtest:
-            messages_processed_successfully = ReportFetcher().get_prebacktest_processed_success(
-                run_backtest_report_name_input
-            )
-            messages_filler = BACKTEST_MESSAGES_FILLER_TYPE_MAPPER[MessageFillTypeChoices.OBJECTS](
-                messages_processed_successfully
-            )
-            backtest_config = BacktestConfig(
-                wallet_initial_amount=wallet_initial_amount
-            )
-            backtest = Backtest(
-                messages_filler=messages_filler,
-                config=backtest_config
-            )
-            backtest.create_backtest_related_instances()
-            backtest.fill_messages()
-            backtest.run_analysing()
-            backtest.save_backtest_to_database()
 
     @staticmethod
     def get_or_create_channel(chat_id, chat_name):
@@ -241,13 +237,14 @@ chats = [
     {'title': 'BlueCapitalFX - Signals🏛', 'username': 'bluecapitalfxsignals', 'id': 1240285626}
 ]
 
-PreBacktest(MAPPING_NAME_TO_CHAT_ID.get(channel), channel,
-            recognise=False,
-            recognise_report_name=report_name_recognised,
-            process_signal=False,
-            process_signal_report_name_input=process_signal_report_name_input,
-            process_signal_report_name_output=process_signal_report_name_output,
-            run_backtest=True,
-            run_backtest_report_name_input=process_signal_report_name_output,
-            wallet_initial_amount=config.WALLET_INITIAL_AMOUNT
-            )
+pre_backtest = PreBacktest(
+    MAPPING_NAME_TO_CHAT_ID.get(channel), channel,
+    recognise=False,
+    recognise_report_name=report_name_recognised,
+    process_signal=False,
+    process_signal_report_name_input=process_signal_report_name_input,
+    process_signal_report_name_output=process_signal_report_name_output,
+    run_backtest=True,
+    run_backtest_report_name_input=process_signal_report_name_output,
+)
+pre_backtest.run_backtest()
