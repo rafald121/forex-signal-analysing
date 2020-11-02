@@ -187,7 +187,6 @@ class Transaction(DynamicDocument):
             closed_take_profits_result = self.get_closed_take_profits_result()
             return closed_take_profits_result+(self.amount_invested-closed_take_profits_result)*self.stop_loss.ratio
         else:
-            logger.error('Shouldbe hererere')
             return self.amount_invested
 
     def is_result_suspicious(self):

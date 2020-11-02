@@ -40,12 +40,10 @@ class PreBacktest():
     def __init__(self, analysed_chat_id, analysed_chat_name,
                  recognise_report_name=None,
                  recognise=False,
-                 process_signal=False,
-                 process_signal_report_name_input=None,
                  process_signal_report_name_output='report_process_signal',
-                 run_backtest=False,
                  run_backtest_report_name_input=process_signal_report_name_output,
                  ):
+
         self.recognise = recognise
         self.analysed_chat_name = analysed_chat_name
         self.run_backtest_report_name_input = run_backtest_report_name_input
@@ -198,7 +196,7 @@ class PreBacktestProcessSignal():
                 if isinstance(decision, DecisionSignal):
                     report['success'].append(messsage)
                 else:
-                    print("SHOULDN BE HERE!!!11")
+                    logger.error("It should be DecisionSignal instance")
             except IncorrectDecisionSignalTradeLevels:
                 report['failures'][IncorrectDecisionSignalTradeLevels.__name__].append(messsage)
             except DecisionSignalTypeUndefined:
@@ -219,32 +217,11 @@ class PreBacktestProcessSignal():
         return report
 
 
-chats = [
-    {'title': 'Forexelliotwave group', 'username': None, 'id': 1269026174},
-    {'title': 'Sure Shot Forex', 'username': 'sureshotforex', 'id': 1127289760},
-    {'title': '🎌FX ScöŕpìoNs🎌', 'username': None, 'id': 1269006602},
-    {'title': 'EZ Profit Pips Free Signals', 'username': 'EZProfitPips', 'id': 1261909982},
-    {'title': 'Forex Analysis by PaxForex', 'username': 'paxforex', 'id': 1082558830},
-    {'title': 'ProFx Analysis Academy', 'username': None, 'id': 1392466168},
-    {'title': 'KijunFX Scalper', 'username': 'KijunFXScalper', 'id': 1386485558},
-    {'title': 'SMART TRADE SOLUTIONS💱', 'username': None, 'id': 1388795077},
-    {'title': 'Pipsmeup', 'username': 'pipsmeupp', 'id': 1192184495},
-    {'title': 'ELEMENTARYFX', 'username': 'ElementaryFX', 'id': 1127198630},
-    {'title': 'Lifestyle Pips FX', 'username': 'lifestylepips', 'id': 1449086607},
-    {'title': '‼️ GA Forex Signals ‼️', 'username': 'GASignals', 'id': 1109190126},
-    {'title': 'Market Profile - Forex Signals', 'username': 'marketprof', 'id': 1145131427},
-    {'title': 'Euphoria Trading', 'username': 'euphoriatrading', 'id': 1259691957},
-    {'title': 'BlueCapitalFX - Signals🏛', 'username': 'bluecapitalfxsignals', 'id': 1240285626}
-]
-
 pre_backtest = PreBacktest(
     MAPPING_NAME_TO_CHAT_ID.get(channel), channel,
     recognise=False,
     recognise_report_name=report_name_recognised,
-    process_signal=False,
-    process_signal_report_name_input=process_signal_report_name_input,
     process_signal_report_name_output=process_signal_report_name_output,
-    run_backtest=True,
     run_backtest_report_name_input=process_signal_report_name_output,
 )
 pre_backtest.run_backtest()

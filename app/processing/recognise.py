@@ -122,7 +122,6 @@ class RecogniseProcessorGaForex(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -250,7 +249,6 @@ class RecogniseProcessorSureShotSignal(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -378,7 +376,6 @@ class RecogniseProcessorLifestylePipsFx(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -672,7 +669,6 @@ class RecogniseProcessorBlueCapitalFx(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -820,7 +816,6 @@ class RecogniseProcessorEuphoriaTrading(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -968,7 +963,6 @@ class RecogniseProcessorPipsMeUp(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)
@@ -1116,7 +1110,6 @@ class RecogniseProcessorFxScorpions(RecognsiseProcessorBase):
 
         text = cls.get_text(message)
         if not text:
-            logger.error(f"COULD NOT BE HERE")
             return False, None
 
         is_message_text_signal, signal_type = cls.is_message_text_signal(message)

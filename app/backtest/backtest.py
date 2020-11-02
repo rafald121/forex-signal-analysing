@@ -110,15 +110,10 @@ class Backtest:
 
         BacktestModel.objects.create(
             created_at=datetime.now(),
-            channel=self.config.channel,
-            tag=self.config.tag,
-            date_to=self.config.date_to,
-            date_from=self.config.date_from,
-            max_days_in_position=self.config.max_days_in_position,
             profit_result=self.wallet.amount-self.wallet.initial_amount,
             initial_amount=self.wallet.initial_amount,
-            strategy_label=self.config.strategy_label,
             statistics=self.statistics.as_json(),
+            config=self.config.get_config_as_json()
         )
 
 
@@ -144,6 +139,18 @@ class BacktestConfig:
         self.amount_single_transaction = amount_single_transaction
         self.max_days_in_position = max_days_in_position
 
+    def get_config_as_json(self):
+        return {
+            "channel": self.channel,
+            "tag": self.tag,
+            "date_from": self.date_from,
+            "date_to": self.date_to,
+            "strategy": self.strategy,
+            "strategy_label": self.strategy_label,
+            "amount_single_transaction": self.amount_single_transaction,
+            "max_days_in_position": self.max_days_in_position,
+            "wallet_initial_amount": self.wallet_initial_amount,
+        }
 
 class BacktestStatistics:
 

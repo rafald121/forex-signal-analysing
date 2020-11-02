@@ -18,8 +18,8 @@ class BacktestReport(DynamicEmbeddedDocument):
 class Backtest(DynamicDocument):
     description = StringField(max_length=256)
     fill_message_type = StringField(choices=MessageFillTypeChoices.choices)
-    date_to = DateTimeField()
     date_from = DateTimeField()
+    date_to = DateTimeField()
     profit_result = FloatField()
 
 
